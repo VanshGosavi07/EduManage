@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 # EduManage – Student Course Management System
 
@@ -128,3 +129,7 @@ See the [LICENSE](LICENSE) file for details.
 
 > Developed by **Vansh Sambhaji Gosavi**  
 > 📧 vanshgosavi7@gmail.com | 📱 +91-9359775740
+=======
+# EduManage
+Student Course Management System
+>>>>>>> 59c6a384be6b3bd510d06e8e93c14830bfe3f0e1
