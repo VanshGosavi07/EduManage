@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Student Course Management</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #1cc88a;
+            --dark-color: #5a5c69;
+        }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f8f9fc;
+        }
+        
+        .register-container {
+            height: 100vh;
+        }
+        
+        .register-image {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #224abe 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .register-image::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 200%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon fill="rgba(255,255,255,0.03)" points="0,100 100,0 100,100"/></svg>');
+            background-size: 100% 100%;
+            opacity: 0.5;
+            transform: rotate(30deg);
+        }
+        
+        .register-image-content {
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .register-form {
+            background: white;
+            padding: 3rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #2e59d9;
+            border-color: #2653d4;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25);
+        }
+        
+        .password-strength {
+            height: 5px;
+            background-color: #e9ecef;
+            margin-top: 0.25rem;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .password-strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid register-container">
+        <div class="row h-100">
+            <!-- Image Section -->
+            <div class="col-lg-6 d-none d-lg-flex register-image align-items-center justify-content-center p-5">
+                <div class="register-image-content text-center animate__animated animate__fadeIn">
+                    <h1 class="display-4 fw-bold mb-4">Get Started</h1>
+                    <p class="lead mb-5">Join our Student Course Management System today</p>
+                    <img src="https://img.freepik.com/free-vector/sign-up-concept-illustration_114360-7965.jpg" alt="Register Illustration" class="img-fluid" style="max-height: 300px;">
+                </div>
+            </div>
+            
+            <!-- Form Section -->
+            <div class="col-lg-6 d-flex align-items-center justify-content-center p-5">
+                <div class="w-100" style="max-width: 500px;">
+                    <div class="text-center mb-5 animate__animated animate__fadeIn">
+                        <h2 class="fw-bold">Create Account</h2>
+                        <p class="text-muted">Fill in your details to register</p>
+                    </div>
+                    
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }} alert-dismissible fade show animate__animated animate__shakeX">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                    
+                    <div class="register-form animate__animated animate__fadeInUp">
+                        <form method="POST" action="{{ url_for('register') }}" id="registerForm">
+                            <div class="mb-4">
+                                <label for="username" class="form-label">Username</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    <input type="text" class="form-control" id="username" name="username" placeholder="Choose a username" required>
+                                </div>
+                                <div class="form-text">Must be 4-20 characters long</div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="password" class="form-label">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="Create a password" required>
+                                </div>
+                                <div class="password-strength mt-2">
+                                    <div class="password-strength-bar" id="passwordStrengthBar"></div>
+                                </div>
+                                <div class="form-text">Minimum 8 characters with at least one number</div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="confirmPassword" class="form-label">Confirm Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                    <input type="password" class="form-control" id="confirmPassword" placeholder="Repeat your password" required>
+                                </div>
+                                <div class="invalid-feedback" id="passwordMatchFeedback">Passwords must match</div>
+                            </div>
+                            
+                            <div class="form-check mb-4">
+                                <input class="form-check-input" type="checkbox" id="termsCheck" required>
+                                <label class="form-check-label" for="termsCheck">
+                                    I agree to the <a href="#" class="text-decoration-none">Terms of Service</a> and <a href="#" class="text-decoration-none">Privacy Policy</a>
+                                </label>
+                            </div>
+                            
+                            <div class="d-grid mb-3">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-user-plus me-2"></i> Register
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="text-center mt-4 animate__animated animate__fadeIn">
+                        <p class="text-muted">Already have an account? <a href="{{ url_for('login') }}" class="text-decoration-none fw-bold">Login here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Animation and form validation script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animation trigger
+            const elements = document.querySelectorAll('.animate__animated');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add(entry.target.dataset.animation);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            elements.forEach(element => {
+                observer.observe(element);
+            });
+            
+            // Password strength indicator
+            const passwordInput = document.getElementById('password');
+            const strengthBar = document.getElementById('passwordStrengthBar');
+            
+            passwordInput.addEventListener('input', function() {
+                const password = this.value;
+                let strength = 0;
+                
+                // Length check
+                if (password.length >= 8) strength += 25;
+                if (password.length >= 12) strength += 25;
+                
+                // Character diversity
+                if (/[A-Z]/.test(password)) strength += 15;
+                if (/[0-9]/.test(password)) strength += 15;
+                if (/[^A-Za-z0-9]/.test(password)) strength += 20;
+                
+                // Update strength bar
+                strengthBar.style.width = strength + '%';
+                
+                // Color coding
+                if (strength < 40) {
+                    strengthBar.style.backgroundColor = '#dc3545';
+                } else if (strength < 70) {
+                    strengthBar.style.backgroundColor = '#fd7e14';
+                } else {
+                    strengthBar.style.backgroundColor = '#28a745';
+                }
+            });
+            
+            // Password match validation
+            const confirmPassword = document.getElementById('confirmPassword');
+            const passwordMatchFeedback = document.getElementById('passwordMatchFeedback');
+            
+            confirmPassword.addEventListener('input', function() {
+                if (this.value !== passwordInput.value) {
+                    this.classList.add('is-invalid');
+                    passwordMatchFeedback.style.display = 'block';
+                } else {
+                    this.classList.remove('is-invalid');
+                    passwordMatchFeedback.style.display = 'none';
+                }
+            });
+            
+            // Form validation
+            document.getElementById('registerForm').addEventListener('submit', function(e) {
+                if (confirmPassword.value !== passwordInput.value) {
+                    e.preventDefault();
+                    confirmPassword.classList.add('is-invalid');
+                    passwordMatchFeedback.style.display = 'block';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

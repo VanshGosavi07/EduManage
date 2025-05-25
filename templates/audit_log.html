@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Audit Log{% endblock %}
+
+{% block header %}Student Changes Audit Log{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">Recent Changes</h5>
+            <span class="badge bg-primary rounded-pill">{{ log_entries|length }} entries</span>
+        </div>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Action</th>
+                    <th>Student ID</th>
+                    <th>Changes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in log_entries %}
+                <tr>
+                    <td>{{ entry.changed_on|datetimeformat }}</td>
+                    <td>
+                        <span class="badge 
+                            {% if entry.action == 'INSERT' %}bg-success
+                            {% elif entry.action == 'UPDATE' %}bg-warning text-dark
+                            {% else %}bg-danger{% endif %}">
+                            {{ entry.action }}
+                        </span>
+                    </td>
+                    <td>{{ entry.student_id }}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-info" type="button" 
+                                data-bs-toggle="collapse" data-bs-target="#details-{{ entry.log_id }}">
+                            <i class="fas fa-info-circle"></i> Details
+                        </button>
+                        
+                        <div id="details-{{ entry.log_id }}" class="collapse mt-2">
+                            <div class="card card-body">
+                                {% if entry.old_data %}
+                                <h6>Before:</h6>
+                                <pre class="mb-3">{{ entry.old_data|tojson(indent=2) }}</pre>
+                                {% endif %}
+                                
+                                {% if entry.new_data %}
+                                <h6>After:</h6>
+                                <pre>{{ entry.new_data|tojson(indent=2) }}</pre>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="text-center">No audit entries found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Auto-expand if there's only one entry
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.querySelectorAll('tbody tr').length === 1) {
+        const collapseElement = document.querySelector('.collapse');
+        if (collapseElement) {
+            new bootstrap.Collapse(collapseElement, { toggle: true });
+        }
+    }
+});
+</script>
+{% endblock %}

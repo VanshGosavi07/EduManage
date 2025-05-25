@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}{{ student[1] }}{% endblock %}
+
+{% block header %}{{ student[1] }}{% endblock %}
+
+{% block header_buttons %}
+    <div class="btn-group me-2">
+        <a href="{{ url_for('list_students') }}" class="btn btn-sm btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+        <a href="{{ url_for('edit_student', student_id=student[0]) }}" class="btn btn-sm btn-outline-primary">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+    </div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Student Information</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <strong>Student ID:</strong> {{ student[0] }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Email:</strong> {{ student[2] }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Date of Birth:</strong> {{ student[3].strftime('%Y-%m-%d') if student[3] else 'Not specified' }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Major:</strong> {{ student[4] or 'Undeclared' }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Enrollment Date:</strong> {{ student[5].strftime('%Y-%m-%d') if student[5] }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Course Enrollment</h5>
+                    <span class="badge bg-primary rounded-pill">{{ enrolled_courses|length }}</span>
+                </div>
+            </div>
+            
+            {% if enrolled_courses %}
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Course Code</th>
+                            <th>Title</th>
+                            <th>Grade</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for course in enrolled_courses %}
+                        <tr>
+                            <td>{{ course[2] }}</td>
+                            <td>{{ course[1] }}</td>
+                            <td>
+                                {% if course[3] %}
+                                <span class="badge bg-{% if course[3] in ['A', 'A-', 'B+', 'B'] %}success
+                                                {% elif course[3] in ['B-', 'C+', 'C'] %}warning
+                                                {% else %}danger{% endif %}">
+                                    {{ course[3] }}
+                                </span>
+                                {% else %}
+                                <span class="badge bg-secondary">Not graded</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <form method="POST" action="{{ url_for('drop_course') }}">
+                                    <input type="hidden" name="student_id" value="{{ student[0] }}">
+                                    <input type="hidden" name="course_id" value="{{ course[0] }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Drop Course">
+                                        <i class="fas fa-user-minus"></i> Drop
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="card-body text-center">
+                <p class="text-muted">This student is not enrolled in any courses.</p>
+            </div>
+            {% endif %}
+        </div>
+        
+        {% if available_courses %}
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Available Courses</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('enroll_student') }}">
+                    <input type="hidden" name="student_id" value="{{ student[0] }}">
+                    <div class="input-group mb-3">
+                        <select class="form-select" name="course_id" required>
+                            <option value="" selected>Select a course...</option>
+                            {% for course in available_courses %}
+                            <option value="{{ course[0] }}">{{ course[1] }} ({{ course[2] }})</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-user-plus"></i> Enroll
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

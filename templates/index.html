@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block header %}Student Course Management System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Quick Stats Card -->
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">
+                    <i class="fas fa-users fa-2x text-primary mb-3"></i><br>
+                    Students
+                </h5>
+                <h2 class="mb-3">{{ student_count }}</h2>
+                <a href="{{ url_for('list_students') }}" class="btn btn-outline-primary">
+                    View All Students
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">
+                    <i class="fas fa-book fa-2x text-success mb-3"></i><br>
+                    Courses
+                </h5>
+                <h2 class="mb-3">{{ course_count }}</h2>
+                <a href="{{ url_for('list_courses') }}" class="btn btn-outline-success">
+                    View All Courses
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">
+                    <i class="fas fa-chalkboard-teacher fa-2x text-info mb-3"></i><br>
+                    Enrollments
+                </h5>
+                <h2 class="mb-3">{{ enrollment_count }}</h2>
+                <a href="{{ url_for('student_grades_report') }}" class="btn btn-outline-info">
+                    View Reports
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <!-- Recent Activities -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-history me-2"></i>Recent Activities
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if recent_activities %}
+                <div class="list-group">
+                    {% for activity in recent_activities %}
+                    <div class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">
+                                <span class="badge 
+                                    {% if activity.action == 'INSERT' %}bg-success
+                                    {% elif activity.action == 'UPDATE' %}bg-warning text-dark
+                                    {% else %}bg-danger{% endif %}">
+                                    {{ activity.action }}
+                                </span>
+                                Student #{{ activity.student_id }}
+                            </h6>
+                            <small class="text-muted">{{ activity.changed_on|datetimeformat }}</small>
+                        </div>
+                        <p class="mb-1">
+                            {% if activity.action == 'INSERT' %}
+                                New student added to the system
+                            {% elif activity.action == 'UPDATE' %}
+                                Student information was modified
+                            {% else %}
+                                Student was removed from the system
+                            {% endif %}
+                        </p>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="text-end mt-3">
+                    <a href="{{ url_for('view_audit_log') }}" class="btn btn-sm btn-outline-secondary">
+                        View Full Audit Log
+                    </a>
+                </div>
+                {% else %}
+                <p class="text-muted">No recent activities found</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-bolt me-2"></i>Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <a href="{{ url_for('add_student') }}" class="btn btn-primary w-100 py-3">
+                            <i class="fas fa-user-plus fa-2x mb-2"></i><br>
+                            Add New Student
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="{{ url_for('add_course') }}" class="btn btn-success w-100 py-3">
+                            <i class="fas fa-plus-circle fa-2x mb-2"></i><br>
+                            Add New Course
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="{{ url_for('list_students') }}" class="btn btn-info w-100 py-3">
+                            <i class="fas fa-list fa-2x mb-2"></i><br>
+                            Manage Students
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="{{ url_for('student_grades_report') }}" class="btn btn-warning w-100 py-3">
+                            <i class="fas fa-chart-bar fa-2x mb-2"></i><br>
+                            Generate Reports
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <!-- System Information -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-info-circle me-2"></i>About the System
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Student Course Management System</h5>
+                        <p>
+                            This system provides comprehensive management of student records, 
+                            course offerings, and enrollment information. Faculty and administrators 
+                            can easily track academic progress and manage institutional data.
+                        </p>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                Manage student records
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                Create and modify courses
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                Handle course enrollments
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                Generate academic reports
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="alert alert-info">
+                            <h5><i class="fas fa-database me-2"></i>System Features</h5>
+                            <p>
+                                This application demonstrates comprehensive PostgreSQL features including:
+                            </p>
+                            <ul>
+                                <li>DDL and DML operations</li>
+                                <li>Stored procedures and functions</li>
+                                <li>Cursors and handlers</li>
+                                <li>Complex joins and nested queries</li>
+                                <li>Triggers for audit logging</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Any additional JavaScript for the home page can go here
+document.addEventListener('DOMContentLoaded', function() {
+    // You could add animations or other interactive elements here
+    console.log('Home page loaded');
+});
+</script>
+{% endblock %}

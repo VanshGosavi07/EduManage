@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}{{ course[1] }}{% endblock %}
+
+{% block header %}{{ course[1] }}{% endblock %}
+
+{% block header_buttons %}
+    <div class="btn-group me-2">
+        <a href="{{ url_for('list_courses') }}" class="btn btn-sm btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Course Information</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <strong>Code:</strong> {{ course[2] }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Credits:</strong> {{ course[3] }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Instructor:</strong> {{ course[4] or 'Not assigned' }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Capacity:</strong> {{ course[5] }} students
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Enrolled Students</h5>
+                    <span class="badge bg-primary rounded-pill">{{ enrolled_students|length }}</span>
+                </div>
+            </div>
+            
+            {% if enrolled_students %}
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Grade</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in enrolled_students %}
+                        <tr>
+                            <td>{{ student[0] }}</td>
+                            <td>
+                                <a href="{{ url_for('view_student', student_id=student[0]) }}">
+                                    {{ student[1] }}
+                                </a>
+                            </td>
+                            <td>
+                                {% if student[2] %}
+                                <span class="badge bg-{% if student[2] in ['A', 'A-', 'B+', 'B'] %}success
+                                                {% elif student[2] in ['B-', 'C+', 'C'] %}warning
+                                                {% else %}danger{% endif %}">
+                                    {{ student[2] }}
+                                </span>
+                                {% else %}
+                                <span class="badge bg-secondary">Not graded</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <form method="POST" action="{{ url_for('update_grade') }}" class="d-inline">
+                                    <input type="hidden" name="course_id" value="{{ course[0] }}">
+                                    <input type="hidden" name="student_id" value="{{ student[0] }}">
+                                    <div class="input-group input-group-sm">
+                                        <select class="form-select form-select-sm" name="grade" style="width: 80px;">
+                                            <option value="">-</option>
+                                            <option value="A" {% if student[2] == 'A' %}selected{% endif %}>A</option>
+                                            <option value="A-" {% if student[2] == 'A-' %}selected{% endif %}>A-</option>
+                                            <option value="B+" {% if student[2] == 'B+' %}selected{% endif %}>B+</option>
+                                            <option value="B" {% if student[2] == 'B' %}selected{% endif %}>B</option>
+                                            <option value="B-" {% if student[2] == 'B-' %}selected{% endif %}>B-</option>
+                                            <option value="C+" {% if student[2] == 'C+' %}selected{% endif %}>C+</option>
+                                            <option value="C" {% if student[2] == 'C' %}selected{% endif %}>C</option>
+                                            <option value="D" {% if student[2] == 'D' %}selected{% endif %}>D</option>
+                                            <option value="F" {% if student[2] == 'F' %}selected{% endif %}>F</option>
+                                        </select>
+                                        <button type="submit" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-save"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                                
+                                <form method="POST" action="{{ url_for('drop_course') }}" class="d-inline ms-1">
+                                    <input type="hidden" name="course_id" value="{{ course[0] }}">
+                                    <input type="hidden" name="student_id" value="{{ student[0] }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Drop Course">
+                                        <i class="fas fa-user-minus"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="card-body text-center">
+                <p class="text-muted">No students enrolled in this course yet.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
