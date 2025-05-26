@@ -89,39 +89,39 @@ EduManage/
 > These screenshots showcase major features and UI of the EduManage system.
 
 **Login Page**  
-![Login Page](Screenshots/Login Page.png)
+![Login Page](Screenshots/Login_Page.png)
 
 **Register Page**  
-![Register Page](Screenshots/Register Page.png)
+![Register Page](Screenshots/Register_Page.png)
 
 **Home Page**  
-![Home Page](Screenshots/Home Page.png)
+![Home Page](Screenshots/Home_Page.png)
 
 **Add Student**  
-![Add Student](Screenshots/Add Student.png)
+![Add Student](Screenshots/Add_Student.png)
 
 **Update Student**  
-![Update Student](Screenshots/Update Student.png)
+![Update Student](Screenshots/Update_Student.png)
 
 **Add Course**  
-![Add Course](Screenshots/Add Course.png)
+![Add Course](Screenshots/Add_Course.png)
 
 **Course Grade Update**  
-![Course Grade Update](Screenshots/Course Grade Update.png)
+![Course Grade Update](Screenshots/Course_Grade_Update.png)
 
 **Audit Log**  
-![Audit Log](Screenshots/Audit Log.png)
+![Audit Log](Screenshots/Audit_Log.png)
 
 **Student Info**  
-![Student Info](Screenshots/Student Info.png)
+![Student Info](Screenshots/Student_Info.png)
 
 **Reports**  
-![Report 1](Screenshots/Report 1.png)  
-![Report 2](Screenshots/Report 2.png)
+![Report 1](Screenshots/Report_1.png)  
+![Report 2](Screenshots/Report_2.png)
 
 **Landing Pages**  
-![Landing Page 1](Screenshots/Landing  Page 1.png)  
-![Landing Page 2](Screenshots/Landing Page 2.png)
+![Landing Page 1](Screenshots/Landing_Page_1.png)  
+![Landing Page 2](Screenshots/Landing_Page_2.png)
 
 ---
 
