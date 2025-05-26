@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 
 # EduManage – Student Course Management System
 
@@ -73,22 +72,60 @@ Visit `http://127.0.0.1:5000/` in your browser.
 
 ```
 EduManage/
+├── Screenshots/
 ├── templates/
-│   ├── landing_page.html
-│   ├── index.html
-│   ├── students/
-│   ├── courses/
-│   ├── auth/
-│   └── reports/
-├── main.py
 ├── .env
-├── requirements.txt
-└── README.md
+├── .gitignore
+├── LICENSE
+├── main.py
+├── README.md
+└── requirements.txt
 ```
 
 ---
 
-## 🧠 5. SQL Features Implemented
+## 🖼️ 5. Application Screenshots
+
+> These screenshots showcase major features and UI of the EduManage system.
+
+**Login Page**  
+![Login Page](Screenshots/Login Page.png)
+
+**Register Page**  
+![Register Page](Screenshots/Register Page.png)
+
+**Home Page**  
+![Home Page](Screenshots/Home Page.png)
+
+**Add Student**  
+![Add Student](Screenshots/Add Student.png)
+
+**Update Student**  
+![Update Student](Screenshots/Update Student.png)
+
+**Add Course**  
+![Add Course](Screenshots/Add Course.png)
+
+**Course Grade Update**  
+![Course Grade Update](Screenshots/Course Grade Update.png)
+
+**Audit Log**  
+![Audit Log](Screenshots/Audit Log.png)
+
+**Student Info**  
+![Student Info](Screenshots/Student Info.png)
+
+**Reports**  
+![Report 1](Screenshots/Report 1.png)  
+![Report 2](Screenshots/Report 2.png)
+
+**Landing Pages**  
+![Landing Page 1](Screenshots/Landing  Page 1.png)  
+![Landing Page 2](Screenshots/Landing Page 2.png)
+
+---
+
+## 🧠 6. SQL Features Implemented
 
 - ✅ DDL (CREATE TABLE)
 - ✅ DML (INSERT, UPDATE, DELETE)
@@ -100,7 +137,7 @@ EduManage/
 
 ---
 
-## 🧪 6. Usage Instructions
+## 🧪 7. Usage Instructions
 
 - Visit `/register` to create an account
 - Access dashboard after login at `/home`
@@ -110,7 +147,7 @@ EduManage/
 
 ---
 
-## 🤝 10. Contribution Guidelines
+## 🤝 8. Contribution Guidelines
 
 1. Fork the repository
 2. Create a new branch (`git checkout -b feature-name`)
@@ -120,7 +157,7 @@ EduManage/
 
 ---
 
-## 📜 11. License Information
+## 📜 9. License Information
 
 This project is licensed under the **MIT License**.  
 See the [LICENSE](LICENSE) file for details.
@@ -129,7 +166,3 @@ See the [LICENSE](LICENSE) file for details.
 
 > Developed by **Vansh Sambhaji Gosavi**  
 > 📧 vanshgosavi7@gmail.com | 📱 +91-9359775740
-=======
-# EduManage
-Student Course Management System
->>>>>>> 59c6a384be6b3bd510d06e8e93c14830bfe3f0e1
