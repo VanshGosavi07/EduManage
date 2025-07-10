@@ -2,17 +2,21 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify, f
 import psycopg2
 from psycopg2 import sql, Error
 import os
-from dotenv import load_dotenv
 from datetime import datetime
 from psycopg2.extras import RealDictCursor
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
-# Load environment variables
-load_dotenv()
+# Set environment variables directly for Vercel deployment
+os.environ['DATABASE_URL'] = 'postgres://neondb_owner:npg_QV0RtlIng2AS@ep-old-cherry-adlijpk5-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require'
+os.environ['PGHOST'] = 'ep-old-cherry-adlijpk5-pooler.c-2.us-east-1.aws.neon.tech'
+os.environ['PGUSER'] = 'neondb_owner'
+os.environ['PGDATABASE'] = 'neondb'
+os.environ['PGPASSWORD'] = 'npg_QV0RtlIng2AS'
+os.environ['SECRET_KEY'] = '5f8b5f6a2e344b3d94f58ae0c9ec2e0e98b1a1d04e0a4a7a8e1d4b7e9c1c5a5a'
 
 app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY')
+app.secret_key = os.environ['SECRET_KEY']
 
 # Initialize Flask-Login
 login_manager = LoginManager()
@@ -52,12 +56,19 @@ def load_user(user_id):
 
 def get_db_connection():
     """Establish connection to PostgreSQL database using environment variables"""
+    # Try DATABASE_URL first (preferred for Vercel deployment)
+    database_url = os.getenv('DATABASE_URL')
+    if database_url:
+        conn = psycopg2.connect(database_url)
+        return conn
+    
+    # Fall back to individual parameters (for local development)
     conn = psycopg2.connect(
-        host=os.getenv('DB_HOST'),
-        database=os.getenv('DB_NAME'),
-        user=os.getenv('DB_USER'),
-        password=os.getenv('DB_PASSWORD'),
-        port=os.getenv('DB_PORT')
+        host=os.getenv('PGHOST') or os.getenv('DB_HOST'),
+        database=os.getenv('PGDATABASE') or os.getenv('DB_NAME'),
+        user=os.getenv('PGUSER') or os.getenv('DB_USER'),
+        password=os.getenv('PGPASSWORD') or os.getenv('DB_PASSWORD'),
+        port=os.getenv('DB_PORT', '5432')
     )
     return conn
 
@@ -170,7 +181,9 @@ def inject_now():
 
 
 # Initialize database when app starts
-initialize_database()
+# Only initialize database on development, Vercel will use preinitialized DB
+if os.environ.get('VERCEL_ENV') != 'production':
+    initialize_database()
 
 # --------------------------
 # PUBLIC ROUTES (No login required)
@@ -988,10 +1001,38 @@ def api_courses():
     except Error as e:
         return jsonify({'error': str(e)}), 500
 
+# Health check endpoint for Vercel
+@app.route('/api/health')
+def health_check():
+    try:
+        # Test DB connection
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute('SELECT 1')
+        cur.close()
+        conn.close()
+        return jsonify({
+            'status': 'healthy',
+            'database': 'connected',
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        return jsonify({
+            'status': 'unhealthy',
+            'error': str(e),
+            'timestamp': datetime.now().isoformat()
+        }), 500
+
 # --------------------------
 # MAIN EXECUTION
 # --------------------------
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Only run in debug mode during development
+    debug_mode = os.environ.get('VERCEL_ENV') != 'production'
+    app.run(debug=debug_mode)
+
+# This is needed for Vercel deployment - expose the Flask app
+# For WSGI compatibility with serverless platforms
+application = app

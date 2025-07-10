@@ -1,4 +1,3 @@
-
 # EduManage – Student Course Management System
 
 ![EduManage Screenshot](https://img.freepik.com/free-vector/online-learning-isometric-concept_1284-17947.jpg)
@@ -17,6 +16,22 @@ EduManage helps educational institutions efficiently manage students, courses, e
 - Grade tracking and GPA reports
 - Audit logging with triggers
 - API endpoints for integration
+
+---
+
+## 🌐 Deploying to Vercel
+
+### Prerequisites
+1. Create an account on [Vercel](https://vercel.com)
+2. Install the Vercel CLI: `npm install -g vercel`
+
+### Deployment Steps
+1. Login to Vercel CLI: `vercel login`
+2. From the project root directory, run: `vercel`
+3. Follow the prompts to configure your project
+4. To deploy to production: `vercel --prod`
+
+The application is pre-configured with environment variables in the code and uses a WSGI entry point for better compatibility with Vercel's serverless environment. No need to set environment variables in Vercel dashboard as they're already included in the code.
 
 ---
 
@@ -39,30 +54,17 @@ git clone https://github.com/yourusername/EduManage.git
 cd EduManage
 ```
 
-### Step 2: Create and configure `.env`
-```ini
-DB_HOST=localhost
-DB_NAME=edumanage
-DB_USER=postgres
-DB_PASSWORD=your_password
-DB_PORT=5432
-SECRET_KEY=your_secret_key
-```
-
-### Step 3: Set up the database
-```sql
-CREATE DATABASE edumanage;
-```
-
-### Step 4: Install dependencies
+### Step 2: Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### Step 5: Run the application
+### Step 3: Run the application
 ```bash
-python main.py
+python wsgi.py
 ```
+
+Note: The project is configured with environment variables directly in the main.py file for easier deployment to Vercel.
 
 Visit `http://127.0.0.1:5000/` in your browser.
 
@@ -74,12 +76,13 @@ Visit `http://127.0.0.1:5000/` in your browser.
 EduManage/
 ├── Screenshots/
 ├── templates/
-├── .env
 ├── .gitignore
 ├── LICENSE
 ├── main.py
 ├── README.md
-└── requirements.txt
+├── requirements.txt
+├── vercel.json
+└── wsgi.py
 ```
 
 ---
